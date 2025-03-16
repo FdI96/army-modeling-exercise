@@ -3,10 +3,22 @@ class Unit
     attr_accessor :type, :force
 
     BASE_FORCE = { spearman: 5, archer: 10, knight: 20 }
+    TRAINING_BONUS = { spearman: 3, archer: 7, knight: 10 }
+    TRAINING_COST = { spearman: 10, archer: 20, knight: 30 }
   
     def initialize(type)
-      @type = type
-      @force = BASE_FORCE[type]
+        @type = type
+        @force = BASE_FORCE[type]
+    end
+
+    def train
+        cost = TRAINING_COST[type]
+        if army.gold >= cost
+          army.gold -= cost
+          @force += TRAINING_BONUS[type]
+        else
+          raise "Not enough gold to train the unit."
+        end
     end
 end
   
@@ -15,16 +27,16 @@ class Army
     attr_accessor :civilization, :units, :gold, :battle_history
 
     CIVILIZATION_CONFIG = {
-      'Chinese'    => { spearman: 2, archer: 25, knight: 2 },
-      'English'  => { spearman: 10, archer: 10, knight: 10 },
-      'Byzantine'=> { spearman: 5, archer: 8, knight: 15 }
+        'Chinese'    => { spearman: 2, archer: 25, knight: 2 },
+        'English'  => { spearman: 10, archer: 10, knight: 10 },
+        'Byzantine'=> { spearman: 5, archer: 8, knight: 15 }
     }
   
     def initialize(civilization)
-      @civilization = civilization
-      @gold = 1000
-      @units = ''
-      @battle_history = []
+        @civilization = civilization
+        @gold = 1000
+        @units = ''
+        @battle_history = []
     end
 end
 
