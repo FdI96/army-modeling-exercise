@@ -5,6 +5,10 @@ class Unit
     BASE_FORCE = { spearman: 5, archer: 10, knight: 20 }
     TRAINING_BONUS = { spearman: 3, archer: 7, knight: 10 }
     TRAINING_COST = { spearman: 10, archer: 20, knight: 30 }
+    TRANSFORMATION_COST = {
+        spearman: { archer: 30 },
+        archer: { knight: 40 }
+    }
   
     def initialize(type)
         @type = type
@@ -20,9 +24,24 @@ class Unit
           raise "Not enough gold to train the unit."
         end
     end
+
+    def transform(army, new_type)
+        valid_transformation = TRANSFORMATION_COST[type] && TRANSFORMATION_COST[type][new_type]
+        if valid_transformation
+          cost = TRANSFORMATION_COST[type][new_type]
+          if army.gold >= cost
+            army.gold -= cost
+            @type = new_type
+            @force = BASE_FORCE[new_type]
+          else
+            raise "Not enough gold to transform the unit"
+          end
+        else
+          raise "Invalid transformation from #{type} to #{new_type}"
+        end
+    end
 end
   
-  # Define the Army class which aggregates units and handles battles
 class Army
     attr_accessor :civilization, :units, :gold, :battle_history
 
@@ -80,9 +99,3 @@ class Army
         end
     end
 end
-
-army1 = Army.new('Chinese')
-army2 = Army.new('English')
-
-puts "Army1: #{army1.civilization}, Gold: #{army1.gold}"
-puts "Army2: #{army2.civilization}, Gold: #{army2.gold}"
