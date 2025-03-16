@@ -43,6 +43,31 @@ class Army
         units.reduce(0) { |sum, unit| sum + unit.force }
     end
 
+    def attack(other_army)
+        if total_force > other_army.total_force
+          other_army.remove_strongest_units(2)
+          @gold += 100
+          @battle_history << "won against #{other_army.civilization}"
+        elsif total_force < other_army.total_force
+          remove_strongest_units(2)
+          other_army.gold += 100
+          other_army.battle_history << "won against #{@civilization}"
+        else
+          remove_strongest_units(1)
+          other_army.remove_strongest_units(1)
+          @battle_history << "tie with #{other_army.civilization}"
+          other_army.battle_history << "Tie with #{@civilization}"
+        end
+    end
+
+    def remove_strongest_units(count)
+        count.times do
+          strongest = units.max_by(&:force)
+          units.delete(strongest) if strongest
+        end
+    end
+    
+
 
     private
 
