@@ -35,8 +35,24 @@ class Army
     def initialize(civilization)
         @civilization = civilization
         @gold = 1000
-        @units = ''
+        @units = create_initial_units
         @battle_history = []
+    end
+
+    def total_force
+        units.reduce(0) { |sum, unit| sum + unit.force }
+    end
+
+
+    private
+
+    def create_initial_units
+        config = CIVILIZATION_CONFIG[@civilization]
+        raise "Unknown civilization" unless config
+
+        config.flat_map do |unit_type, number|
+        Array.new(number) { Unit.new(unit_type) }
+        end
     end
 end
 
