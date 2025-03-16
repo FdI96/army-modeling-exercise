@@ -11,7 +11,7 @@ class Unit
         @force = BASE_FORCE[type]
     end
 
-    def train
+    def train(army)
         cost = TRAINING_COST[type]
         if army.gold >= cost
           army.gold -= cost
